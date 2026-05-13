@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberLab — Siber Güvenlik Eğitim Platformu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --bg2: #0f1520;
+    --bg3: #141c2e;
+    --card: #111827;
+    --card2: #1a2235;
+    --border: rgba(99,210,155,0.15);
+    --border2: rgba(99,210,155,0.3);
+    --green: #63d29b;
+    --green2: #3db578;
+    --green-dim: rgba(99,210,155,0.08);
+    --cyan: #4ecdc4;
+    --red: #ff4d4d;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --text: #e2e8f0;
+    --text2: #8b9ab5;
+    --text3: #5a6a82;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+    --radius: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- GRID BG ---- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(99,210,155,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,210,155,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 60px;
+    background: rgba(10,14,23,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-logo span { color: var(--green); }
+
+  .nav-lang {
+    display: flex;
+    gap: 4px;
+  }
+
+  .lang-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .lang-btn.active, .lang-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--green); }
+
+  /* ---- HERO ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    border: 1px solid var(--border2);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--green-dim);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 span { color: var(--green); }
+
+  .hero p {
+    font-size: 1rem;
+    color: var(--text2);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto 2rem;
+  }
+
+  /* ---- MODULE GRID ---- */
+  .modules-section {
+    position: relative;
+    z-index: 1;
+    padding: 1rem 2rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 2.5rem;
+  }
+
+  .module-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s;
+  }
+
+  .module-card:hover { border-color: var(--border2); background: var(--card2); transform: translateY(-2px); }
+  .module-card:hover::before { transform: scaleX(1); }
+  .module-card.active { border-color: var(--green); background: var(--card2); }
+  .module-card.active::before { transform: scaleX(1); }
+
+  .module-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .module-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  .module-desc {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+    line-height: 1.5;
+  }
+
+  .difficulty-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .diff-beginner { background: rgba(99,210,155,0.12); color: var(--green); }
+  .diff-intermediate { background: rgba(245,158,11,0.12); color: var(--amber); }
+  .diff-advanced { background: rgba(255,77,77,0.12); color: var(--red); }
+
+  /* ---- LAB PANEL ---- */
+  .lab-panel {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+    display: none;
+  }
+
+  .lab-panel.visible { display: block; }
+
+  .lab-container {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .lab-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--card2);
+  }
+
+  .lab-title-block { display: flex; align-items: center; gap: 10px; }
+
+  .lab-title-block h2 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .lab-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid var(--border2);
+    letter-spacing: 0.05em;
+  }
+
+  .close-lab {
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    transition: color .2s;
+    padding: 4px;
+  }
+  .close-lab:hover { color: var(--red); }
+
+  .lab-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 420px;
+  }
+
+  @media (max-width: 700px) {
+    .lab-body { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+
+  .lab-theory {
+    padding: 1.5rem;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    max-height: 520px;
+  }
+
+  .lab-theory h3 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-family: var(--mono);
+    margin-bottom: 1rem;
+  }
+
+  .theory-block {
+    margin-bottom: 1.2rem;
+  }
+
+  .theory-block h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .theory-block p {
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.65;
+    font-family: var(--mono);
+  }
+
+  .code-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 14px;
+    font-size: 11.5px;
+    font-family: var(--mono);
+    color: var(--green);
+    margin-top: 8px;
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.6;
+  }
+
+  /* ---- LAB INTERACTIVE ---- */
+  .lab-interactive {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lab-interactive h3 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    font-family: var(--mono);
+    margin-bottom: 4px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .input-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  .lab-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .lab-input:focus { border-color: var(--green); }
+
+  .lab-input::placeholder { color: var(--text3); }
+
+  .lab-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--green);
+    background: var(--green-dim);
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s;
+    width: 100%;
+  }
+
+  .lab-btn:hover { background: rgba(99,210,155,0.15); transform: translateY(-1px); }
+  .lab-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .lab-btn.danger {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(255,77,77,0.08);
+  }
+  .lab-btn.danger:hover { background: rgba(255,77,77,0.15); }
+
+  /* ---- TERMINAL OUTPUT ---- */
+  .terminal {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    min-height: 120px;
+    max-height: 200px;
+    overflow-y: auto;
+    line-height: 1.7;
+  }
+
+  .terminal-line { display: block; }
+  .t-prompt { color: var(--green); }
+  .t-info { color: var(--cyan); }
+  .t-warn { color: var(--amber); }
+  .t-err { color: var(--red); }
+  .t-success { color: var(--green); font-weight: 700; }
+  .t-dim { color: var(--text3); }
+  .t-blink::after { content: '█'; animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ---- RESULT CARD ---- */
+  .result-card {
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    font-family: var(--mono);
+    line-height: 1.6;
+    display: none;
+  }
+
+  .result-card.show { display: block; }
+  .result-card.safe { background: rgba(99,210,155,0.08); border: 1px solid rgba(99,210,155,0.3); color: var(--green); }
+  .result-card.danger { background: rgba(255,77,77,0.08); border: 1px solid rgba(255,77,77,0.3); color: var(--red); }
+  .result-card.warn { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); color: var(--amber); }
+  .result-card.info { background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.3); color: var(--cyan); }
+
+  .result-card strong { font-weight: 700; display: block; margin-bottom: 4px; }
+
+  /* ---- METER ---- */
+  .strength-meter {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .strength-meter.show { display: flex; }
+
+  .strength-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  .strength-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .strength-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .6s ease, background .3s;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  /* ---- PHISHING SPECIFIC ---- */
+  .url-analysis-grid {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .url-analysis-grid.show { display: grid; }
+
+  .analysis-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .analysis-item .a-label { color: var(--text3); font-size: 10px; margin-bottom: 2px; }
+  .analysis-item .a-val { color: var(--text); }
+  .analysis-item.a-bad .a-val { color: var(--red); }
+  .analysis-item.a-good .a-val { color: var(--green); }
+  .analysis-item.a-warn .a-val { color: var(--amber); }
+
+  /* ---- OSINT specific ---- */
+  .osint-results {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .osint-results.show { display: flex; }
+
+  .osint-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .osint-item .o-key { color: var(--text3); }
+  .osint-item .o-val { color: var(--text); }
+  .osint-item .o-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .o-exposed { background: rgba(255,77,77,0.12); color: var(--red); }
+  .o-private { background: rgba(99,210,155,0.12); color: var(--green); }
+  .o-partial { background: rgba(245,158,11,0.12); color: var(--amber); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 5px; }
+
+  /* SQL injection specific */
+  .sql-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 11px;
+    margin-top: 6px;
+    display: none;
+  }
+  .sql-table.show { display: table; }
+  .sql-table th {
+    text-align: left;
+    padding: 5px 10px;
+    color: var(--green);
+    border-bottom: 1px solid var(--border2);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .sql-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+  .sql-table tr:last-child td { border-bottom: none; }
+
+  /* nmap specific */
+  .nmap-ports {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .nmap-ports.show { display: flex; }
+
+  .port-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 5px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .p-num { color: var(--cyan); min-width: 50px; }
+  .p-state { font-size: 10px; padding: 1px 7px; border-radius: 4px; }
+  .p-open { background: rgba(99,210,155,0.12); color: var(--green); }
+  .p-closed { background: rgba(255,77,77,0.1); color: var(--text3); }
+  .p-filtered { background: rgba(245,158,11,0.1); color: var(--amber); }
+  .p-service { color: var(--text2); flex: 1; }
+  .p-risk { font-size: 10px; color: var(--text3); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">⬡ Cyber<span>Lab</span></div>
+  <ul class="nav-links">
+    <li><a href="#labs" id="nav-labs">Labs</a></li>
+    <li><a href="#" id="nav-about">Hakkında</a></li>
+  </ul>
+  <div class="nav-lang">
+    <button class="lang-btn active" onclick="setLang('tr')">TR</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag" id="hero-tag">// Eğitim Ortamı</div>
+  <h1 id="hero-h1">Siber Güvenliği<br><span id="hero-span">Yaparak Öğren</span></h1>
+  <p id="hero-p">Gerçek saldırı tekniklerini güvenli, izole lab ortamında keşfet. Her modül teorik bilgi ve interaktif simülasyon içerir.</p>
+</section>
+
+<section class="modules-section" id="labs">
+  <div class="section-label" id="section-label">Laboratuvar Modülleri</div>
+  <div class="module-grid" id="module-grid">
+
+    <div class="module-card" onclick="openLab('bruteforce')">
+      <div class="module-icon" style="background:rgba(99,210,155,0.1)">🔓</div>
+      <div class="module-title" id="m-bf-title">Brute Force</div>
+      <div class="module-desc" id="m-bf-desc">Parola saldırısı simülasyonu</div>
+      <span class="difficulty-badge diff-beginner">Başlangıç</span>
+    </div>
+
+    <div class="module-card" onclick="openLab('osint')">
+      <div class="module-icon" style="background:rgba(78,205,196,0.1)">🔍</div>
+      <div class="module-title">OSINT</div>
+      <div class="module-desc" id="m-os-desc">Açık kaynak istihbarat</div>
+      <span class="difficulty-badge diff-intermediate" id="m-os-diff">Orta</span>
+    </div>
+
+    <div class="module-card" onclick="openLab('nmap')">
+      <div class="module-icon" style="background:rgba(59,130,246,0.1)">📡</div>
+      <div class="module-title">Nmap</div>
+      <div class="module-desc" id="m-nm-desc">Port tarama & keşif</div>
+      <span class="difficulty-badge diff-intermediate" id="m-nm-diff">Orta</span>
+    </div>
+
+    <div class="module-card" onclick="openLab('phishing')">
+      <div class="module-icon" style="background:rgba(245,158,11,0.1)">🎣</div>
+      <div class="module-title">Phishing URL</div>
+      <div class="module-desc" id="m-ph-desc">Sahte bağlantı tespiti</div>
+      <span class="difficulty-badge diff-beginner" id="m-ph-diff">Başlangıç</span>
+    </div>
+
+    <div class="module-card" onclick="openLab('sqli')">
+      <div class="module-icon" style="background:rgba(255,77,77,0.1)">💉</div>
+      <div class="module-title">SQL Injection</div>
+      <div class="module-desc" id="m-sq-desc">Veritabanı enjeksiyon saldırısı</div>
+      <span class="difficulty-badge diff-advanced" id="m-sq-diff">İleri</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== LAB PANEL ====== -->
+<div class="lab-panel" id="lab-panel">
+  <div class="lab-container">
+    <div class="lab-header">
+      <div class="lab-title-block">
+        <span id="lab-icon" style="font-size:20px">🔓</span>
+        <h2 id="lab-title">Brute Force Lab</h2>
+        <span class="lab-badge" id="lab-badge">LAB_ACTIVE</span>
+      </div>
+      <button class="close-lab" onclick="closeLab()">✕</button>
+    </div>
+    <div class="lab-body">
+      <!-- THEORY -->
+      <div class="lab-theory" id="lab-theory-content"></div>
+      <!-- INTERACTIVE -->
+      <div class="lab-interactive" id="lab-interactive-content"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  ⬡ CyberLab — <span id="footer-text">Eğitim amaçlıdır. Gerçek sistemlerde izinsiz uygulama yasaktır.</span>
+</footer>
+
+<script>
+// ============================
+// LANGUAGE
+// ============================
+let lang = 'tr';
+
+const T = {
+  tr: {
+    heroTag: '// Eğitim Ortamı',
+    heroH1: 'Siber Güvenliği',
+    heroSpan: 'Yaparak Öğren',
+    heroP: 'Gerçek saldırı tekniklerini güvenli, izole lab ortamında keşfet. Her modül teorik bilgi ve interaktif simülasyon içerir.',
+    sectionLabel: 'Laboratuvar Modülleri',
+    mBfDesc: 'Parola saldırısı simülasyonu',
+    mOsDesc: 'Açık kaynak istihbarat',
+    mNmDesc: 'Port tarama & keşif',
+    mPhDesc: 'Sahte bağlantı tespiti',
+    mSqDesc: 'Veritabanı enjeksiyon saldırısı',
+    diffBeg: 'Başlangıç', diffMid: 'Orta', diffAdv: 'İleri',
+    footer: 'Eğitim amaçlıdır. Gerçek sistemlerde izinsiz uygulama yasaktır.',
+  },
+  en: {
+    heroTag: '// Training Environment',
+    heroH1: 'Learn Cybersecurity',
+    heroSpan: 'By Doing It',
+    heroP: 'Explore real attack techniques in a safe, isolated lab environment. Each module includes theory and interactive simulation.',
+    sectionLabel: 'Laboratory Modules',
+    mBfDesc: 'Password attack simulation',
+    mOsDesc: 'Open source intelligence',
+    mNmDesc: 'Port scanning & discovery',
+    mPhDesc: 'Fake link detection',
+    mSqDesc: 'Database injection attack',
+    diffBeg: 'Beginner', diffMid: 'Intermediate', diffAdv: 'Advanced',
+    footer: 'For educational purposes only. Unauthorized use on real systems is illegal.',
+  }
+};
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick*="${l}"]`).classList.add('active');
+  const t = T[l];
+  document.getElementById('hero-tag').textContent = t.heroTag;
+  document.getElementById('hero-h1').childNodes[0].textContent = t.heroH1+ '\n';
+  document.getElementById('hero-span').textContent = t.heroSpan;
+  document.getElementById('hero-p').textContent = t.heroP;
+  document.getElementById('section-label').textContent = t.sectionLabel;
+  document.getElementById('m-bf-title').textContent = 'Brute Force';
+  document.getElementById('m-bf-desc').textContent = t.mBfDesc;
+  document.getElementById('m-os-desc').textContent = t.mOsDesc;
+  document.getElementById('m-nm-desc').textContent = t.mNmDesc;
+  document.getElementById('m-ph-desc').textContent = t.mPhDesc;
+  document.getElementById('m-sq-desc').textContent = t.mSqDesc;
+  document.getElementById('m-os-diff').textContent = t.diffMid;
+  document.getElementById('m-nm-diff').textContent = t.diffMid;
+  document.getElementById('m-ph-diff').textContent = t.diffBeg;
+  document.getElementById('m-sq-diff').textContent = t.diffAdv;
+  document.getElementById('footer-text').textContent = t.footer;
+}
+
+// ============================
+// LAB DATA
+// ============================
+const labs = {
+  bruteforce: {
+    icon: '🔓',
+    title: { tr: 'Brute Force Lab', en: 'Brute Force Lab' },
+    theory: {
+      tr: `
+        <h3>// Teori</h3>
+        <div class="theory-block">
+          <h4>Brute Force Nedir?</h4>
+          <p>Brute force (kaba kuvvet) saldırısı, saldırganın doğru kimlik bilgilerini bulana kadar olası tüm kombinasyonları sistematik olarak denediği bir saldırı yöntemidir.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Saldırı Türleri</h4>
+          <p><strong style="color:var(--cyan)">Dictionary Attack:</strong> Önceden hazırlanmış wordlist kullanır.</p>
+          <p><strong style="color:var(--cyan)">Pure Brute Force:</strong> Tüm karakter kombinasyonlarını dener.</p>
+          <p><strong style="color:var(--cyan)">Hybrid Attack:</strong> İki yöntemi birleştirir.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Gerçek Dünya Araçları</h4>
+          <div class="code-block">hydra -l admin -P wordlist.txt ssh://target
+hashcat -m 0 hash.txt rockyou.txt
+john --wordlist=pass.txt hashes</div>
+        </div>
+        <div class="theory-block">
+          <h4>Savunma Yöntemleri</h4>
+          <p>• Güçlü parola politikası<br>• Hesap kilitleme (lockout)<br>• MFA (çok faktörlü kimlik doğrulama)<br>• Rate limiting & CAPTCHA<br>• IP engelleme</p>
+        </div>
+      `,
+      en: `
+        <h3>// Theory</h3>
+        <div class="theory-block">
+          <h4>What is Brute Force?</h4>
+          <p>A brute force attack is where an attacker systematically tries all possible combinations until the correct credentials are found.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Attack Types</h4>
+          <p><strong style="color:var(--cyan)">Dictionary Attack:</strong> Uses a pre-built wordlist.</p>
+          <p><strong style="color:var(--cyan)">Pure Brute Force:</strong> Tries all character combinations.</p>
+          <p><strong style="color:var(--cyan)">Hybrid Attack:</strong> Combines both methods.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Real-World Tools</h4>
+          <div class="code-block">hydra -l admin -P wordlist.txt ssh://target
+hashcat -m 0 hash.txt rockyou.txt
+john --wordlist=pass.txt hashes</div>
+        </div>
+        <div class="theory-block">
+          <h4>Defense Methods</h4>
+          <p>• Strong password policy<br>• Account lockout<br>• MFA (multi-factor auth)<br>• Rate limiting & CAPTCHA<br>• IP blocking</p>
+        </div>
+      `
+    },
+    interactive: 'bruteforce'
+  },
+
+  osint: {
+    icon: '🔍',
+    title: { tr: 'OSINT Lab', en: 'OSINT Lab' },
+    theory: {
+      tr: `
+        <h3>// Teori</h3>
+        <div class="theory-block">
+          <h4>OSINT Nedir?</h4>
+          <p>Open Source Intelligence (Açık Kaynak İstihbarat), herkese açık kaynaklardan bilgi toplama sanatıdır. Güvenlik uzmanları hedef hakkında bilgi toplamak için kullanır.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Kaynaklar</h4>
+          <p>• Sosyal medya profilleri<br>• WHOIS kayıtları<br>• DNS kayıtları<br>• Shodan, Censys gibi arama motorları<br>• GitHub/GitLab<br>• The Wayback Machine</p>
+        </div>
+        <div class="theory-block">
+          <h4>Araçlar</h4>
+          <div class="code-block">theHarvester -d target.com -b all
+maltego -graph domain.mtgx
+recon-ng -w workspace
+amass enum -d target.com</div>
+        </div>
+        <div class="theory-block">
+          <h4>Savunma</h4>
+          <p>• Dijital ayak izini minimize et<br>• WHOIS gizlilik servisi kullan<br>• Sosyal medyada bilgi paylaşımını sınırla</p>
+        </div>
+      `,
+      en: `
+        <h3>// Theory</h3>
+        <div class="theory-block">
+          <h4>What is OSINT?</h4>
+          <p>Open Source Intelligence is the art of collecting information from publicly available sources. Security professionals use it to gather target intelligence.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Sources</h4>
+          <p>• Social media profiles<br>• WHOIS records<br>• DNS records<br>• Search engines like Shodan, Censys<br>• GitHub/GitLab<br>• The Wayback Machine</p>
+        </div>
+        <div class="theory-block">
+          <h4>Tools</h4>
+          <div class="code-block">theHarvester -d target.com -b all
+maltego -graph domain.mtgx
+recon-ng -w workspace
+amass enum -d target.com</div>
+        </div>
+        <div class="theory-block">
+          <h4>Defense</h4>
+          <p>• Minimize digital footprint<br>• Use WHOIS privacy service<br>• Limit info shared on social media</p>
+        </div>
+      `
+    },
+    interactive: 'osint'
+  },
+
+  nmap: {
+    icon: '📡',
+    title: { tr: 'Nmap Lab', en: 'Nmap Lab' },
+    theory: {
+      tr: `
+        <h3>// Teori</h3>
+        <div class="theory-block">
+          <h4>Nmap Nedir?</h4>
+          <p>Network Mapper, ağ keşfi ve güvenlik denetimi için kullanılan açık kaynaklı bir araçtır. Hangi portların açık olduğunu, hangi servislerin çalıştığını ve OS bilgisini ortaya çıkarır.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Tarama Türleri</h4>
+          <p><strong style="color:var(--cyan)">SYN Scan (-sS):</strong> Gizli, yarı-açık tarama.<br>
+          <strong style="color:var(--cyan)">TCP Connect (-sT):</strong> Tam bağlantı taraması.<br>
+          <strong style="color:var(--cyan)">UDP Scan (-sU):</strong> UDP portlarını tarar.<br>
+          <strong style="color:var(--cyan)">OS Detection (-O):</strong> İşletim sistemi tespiti.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Komut Örnekleri</h4>
+          <div class="code-block">nmap -sV -p- target.com
+nmap -A -T4 192.168.1.0/24
+nmap --script vuln target.com
+nmap -sU --top-ports 100 target</div>
+        </div>
+        <div class="theory-block">
+          <h4>Savunma</h4>
+          <p>• Güvenlik duvarı kuralları<br>• Port gizleme (port knocking)<br>• IDS/IPS sistemleri<br>• Gereksiz servisleri kapat</p>
+        </div>
+      `,
+      en: `
+        <h3>// Theory</h3>
+        <div class="theory-block">
+          <h4>What is Nmap?</h4>
+          <p>Network Mapper is an open-source tool for network discovery and security auditing. It reveals which ports are open, which services are running, and OS information.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Scan Types</h4>
+          <p><strong style="color:var(--cyan)">SYN Scan (-sS):</strong> Stealth half-open scan.<br>
+          <strong style="color:var(--cyan)">TCP Connect (-sT):</strong> Full connection scan.<br>
+          <strong style="color:var(--cyan)">UDP Scan (-sU):</strong> Scans UDP ports.<br>
+          <strong style="color:var(--cyan)">OS Detection (-O):</strong> Detects operating system.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Command Examples</h4>
+          <div class="code-block">nmap -sV -p- target.com
+nmap -A -T4 192.168.1.0/24
+nmap --script vuln target.com
+nmap -sU --top-ports 100 target</div>
+        </div>
+        <div class="theory-block">
+          <h4>Defense</h4>
+          <p>• Firewall rules<br>• Port knocking<br>• IDS/IPS systems<br>• Close unnecessary services</p>
+        </div>
+      `
+    },
+    interactive: 'nmap'
+  },
+
+  phishing: {
+    icon: '🎣',
+    title: { tr: 'Phishing URL Lab', en: 'Phishing URL Lab' },
+    theory: {
+      tr: `
+        <h3>// Teori</h3>
+        <div class="theory-block">
+          <h4>Phishing Nedir?</h4>
+          <p>Phishing, kurbanları hassas bilgilerini ifşa etmeye kandırmak için meşru web sitelerini taklit eden sahte bağlantılar kullanan bir sosyal mühendislik saldırısıdır.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Phishing URL İşaretleri</h4>
+          <p>• Typosquatting: paypa1.com, g00gle.com<br>• Subdomain hilesi: paypal.com.evil.com<br>• URL kısaltıcı arkasında gizlenme<br>• Garip TLD: .xyz, .tk, .ml<br>• HTTP (SSL yok)<br>• Aşırı uzun URL'ler</p>
+        </div>
+        <div class="theory-block">
+          <h4>Analiz Araçları</h4>
+          <div class="code-block">VirusTotal: virustotal.com
+URLScan: urlscan.io
+PhishTank: phishtank.org
+whois domain.com</div>
+        </div>
+        <div class="theory-block">
+          <h4>Savunma</h4>
+          <p>• URL'yi tıklamadan önce kontrol et<br>• HTTPS ve sertifikayı doğrula<br>• Antiphishing yazılımı kullan<br>• Çalışanlara eğitim ver</p>
+        </div>
+      `,
+      en: `
+        <h3>// Theory</h3>
+        <div class="theory-block">
+          <h4>What is Phishing?</h4>
+          <p>Phishing is a social engineering attack that uses fake links impersonating legitimate websites to trick victims into exposing sensitive information.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Phishing URL Indicators</h4>
+          <p>• Typosquatting: paypa1.com, g00gle.com<br>• Subdomain trick: paypal.com.evil.com<br>• Hidden behind URL shorteners<br>• Suspicious TLD: .xyz, .tk, .ml<br>• HTTP (no SSL)<br>• Excessively long URLs</p>
+        </div>
+        <div class="theory-block">
+          <h4>Analysis Tools</h4>
+          <div class="code-block">VirusTotal: virustotal.com
+URLScan: urlscan.io
+PhishTank: phishtank.org
+whois domain.com</div>
+        </div>
+        <div class="theory-block">
+          <h4>Defense</h4>
+          <p>• Check URLs before clicking<br>• Verify HTTPS and certificate<br>• Use antiphishing software<br>• Train employees</p>
+        </div>
+      `
+    },
+    interactive: 'phishing'
+  },
+
+  sqli: {
+    icon: '💉',
+    title: { tr: 'SQL Injection Lab', en: 'SQL Injection Lab' },
+    theory: {
+      tr: `
+        <h3>// Teori</h3>
+        <div class="theory-block">
+          <h4>SQL Injection Nedir?</h4>
+          <p>SQL Injection, kullanıcı girdisine kötü amaçlı SQL kodu enjekte ederek veritabanına yetkisiz erişim sağlayan bir web güvenliği açığıdır. OWASP Top 10'da yer alır.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Saldırı Türleri</h4>
+          <p><strong style="color:var(--cyan)">In-Band SQLi:</strong> Error-based ve Union-based.<br>
+          <strong style="color:var(--cyan)">Blind SQLi:</strong> Boolean ve Time-based.<br>
+          <strong style="color:var(--cyan)">Out-of-Band:</strong> DNS/HTTP üzerinden veri sızdırma.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Klasik Payload'lar</h4>
+          <div class="code-block">' OR '1'='1
+' OR 1=1 --
+admin'--
+' UNION SELECT 1,user(),database()--
+1; DROP TABLE users--</div>
+        </div>
+        <div class="theory-block">
+          <h4>Savunma</h4>
+          <p>• Prepared statements / parametreli sorgular<br>• Input validation & sanitization<br>• WAF (Web Application Firewall)<br>• En az yetki prensibi (PoLP)</p>
+        </div>
+      `,
+      en: `
+        <h3>// Theory</h3>
+        <div class="theory-block">
+          <h4>What is SQL Injection?</h4>
+          <p>SQL Injection is a web security vulnerability that injects malicious SQL code into user input to gain unauthorized database access. Listed in OWASP Top 10.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Attack Types</h4>
+          <p><strong style="color:var(--cyan)">In-Band SQLi:</strong> Error-based and Union-based.<br>
+          <strong style="color:var(--cyan)">Blind SQLi:</strong> Boolean and Time-based.<br>
+          <strong style="color:var(--cyan)">Out-of-Band:</strong> Data exfiltration via DNS/HTTP.</p>
+        </div>
+        <div class="theory-block">
+          <h4>Classic Payloads</h4>
+          <div class="code-block">' OR '1'='1
+' OR 1=1 --
+admin'--
+' UNION SELECT 1,user(),database()--
+1; DROP TABLE users--</div>
+        </div>
+        <div class="theory-block">
+          <h4>Defense</h4>
+          <p>• Prepared statements / parameterized queries<br>• Input validation & sanitization<br>• WAF (Web Application Firewall)<br>• Principle of least privilege (PoLP)</p>
+        </div>
+      `
+    },
+    interactive: 'sqli'
+  }
+};
+
+// ============================
+// OPEN / CLOSE LAB
+// ============================
+function openLab(id) {
+  const lab = labs[id];
+  document.querySelectorAll('.module-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  document.getElementById('lab-icon').textContent = lab.icon;
+  document.getElementById('lab-title').textContent = lab.title[lang];
+  document.getElementById('lab-theory-content').innerHTML = lab.theory[lang];
+
+  renderInteractive(lab.interactive);
+
+  const panel = document.getElementById('lab-panel');
+  panel.classList.add('visible');
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function closeLab() {
+  document.getElementById('lab-panel').classList.remove('visible');
+  document.querySelectorAll('.module-card').forEach(c => c.classList.remove('active'));
+}
+
+// ============================
+// INTERACTIVE RENDERERS
+// ============================
+function renderInteractive(type) {
+  const container = document.getElementById('lab-interactive-content');
+  if (type === 'bruteforce') container.innerHTML = buildBruteforce();
+  else if (type === 'osint') container.innerHTML = buildOSINT();
+  else if (type === 'nmap') container.innerHTML = buildNmap();
+  else if (type === 'phishing') container.innerHTML = buildPhishing();
+  else if (type === 'sqli') container.innerHTML = buildSQLi();
+}
+
+// ---- BRUTE FORCE ----
+function buildBruteforce() {
+  return `
+    <h3>${lang==='tr'?'// Simülasyon':'// Simulation'}</h3>
+    <div class="input-group">
+      <span class="input-label">${lang==='tr'?'TEST EDİLECEK PAROLA:':'PASSWORD TO TEST:'}</span>
+      <input class="lab-input" id="bf-input" type="text" placeholder="${lang==='tr'?'Parolanızı girin...':'Enter your password...'}" oninput="bfStrengthLive(this.value)">
+    </div>
+    <div class="strength-meter" id="bf-meter">
+      <div class="strength-label">
+        <span id="bf-strength-label" style="color:var(--text3)">${lang==='tr'?'Güç:':'Strength:'}</span>
+        <span id="bf-strength-val" style="color:var(--text3)">—</span>
+      </div>
+      <div class="strength-bar"><div class="strength-fill" id="bf-fill" style="width:0%;background:var(--red)"></div></div>
+    </div>
+    <button class="lab-btn" id="bf-btn" onclick="runBruteforce()">
+      ▶ ${lang==='tr'?'SALDIRI SİMÜLASYONU BAŞLAT':'START ATTACK SIMULATION'}
+    </button>
+    <div class="terminal" id="bf-terminal">
+      <span class="terminal-line t-dim">${lang==='tr'?'# Parola giriniz ve simülasyonu başlatın':'# Enter password and start simulation'}</span>
+    </div>
+    <div class="result-card" id="bf-result"></div>
+  `;
+}
+
+function bfStrengthLive(val) {
+  if(!val) { document.getElementById('bf-meter').classList.remove('show'); return; }
+  document.getElementById('bf-meter').classList.add('show');
+  const score = calcPasswordStrength(val);
+  const fill = document.getElementById('bf-fill');
+  const lbl = document.getElementById('bf-strength-val');
+  const pct = Math.min(100, score * 20);
+  fill.style.width = pct + '%';
+  if(score <= 1) { fill.style.background='var(--red)'; lbl.style.color='var(--red)'; lbl.textContent=lang==='tr'?'Çok Zayıf':'Very Weak'; }
+  else if(score<=2) { fill.style.background='var(--amber)'; lbl.style.color='var(--amber)'; lbl.textContent=lang==='tr'?'Zayıf':'Weak'; }
+  else if(score<=3) { fill.style.background='var(--amber)'; lbl.style.color='var(--amber)'; lbl.textContent=lang==='tr'?'Orta':'Medium'; }
+  else if(score<=4) { fill.style.background='var(--cyan)'; lbl.style.color='var(--cyan)'; lbl.textContent=lang==='tr'?'Güçlü':'Strong'; }
+  else { fill.style.background='var(--green)'; lbl.style.color='var(--green)'; lbl.textContent=lang==='tr'?'Çok Güçlü':'Very Strong'; }
+}
+
+function calcPasswordStrength(p) {
+  let s = 0;
+  if(p.length >= 8) s++;
+  if(p.length >= 14) s++;
+  if(/[A-Z]/.test(p)) s++;
+  if(/[0-9]/.test(p)) s++;
+  if(/[^A-Za-z0-9]/.test(p)) s++;
+  return s;
+}
+
+function runBruteforce() {
+  const pwd = document.getElementById('bf-input').value.trim();
+  if(!pwd) return;
+  const term = document.getElementById('bf-terminal');
+  const result = document.getElementById('bf-result');
+  result.classList.remove('show','safe','danger','warn');
+  document.getElementById('bf-btn').disabled = true;
+
+  const strength = calcPasswordStrength(pwd);
+  const wordlist = ['123456','password','admin','qwerty','letmein','123123','abc123','pass123','1234','iloveyou','monkey','dragon','master','football','superman'];
+  const inWordlist = wordlist.includes(pwd.toLowerCase());
+
+  const lines = [];
+  if(lang==='tr') {
+    lines.push({t:'t-prompt', m:'[*] Hedef sistem bağlantısı kuruluyor...'});
+    lines.push({t:'t-info', m:'[*] Brute force modülü başlatıldı'});
+    lines.push({t:'t-dim', m:'[*] Wordlist yükleniyor: rockyou.txt (14M kayıt)'});
+    lines.push({t:'t-dim', m:`[*] Hedef parola uzunluğu: ${pwd.length} karakter`});
+    if(inWordlist) {
+      lines.push({t:'t-warn', m:'[!] Parola yaygın wordlist\'te tespit edildi!'});
+      lines.push({t:'t-err', m:`[+] PAROLA BULUNDU: "${pwd}" — 0.3 saniye içinde`});
+    } else if(strength <= 2) {
+      lines.push({t:'t-dim', m:'[*] Brute force denemesi başlıyor...'});
+      lines.push({t:'t-warn', m:`[*] Denenen kombinasyonlar: ${Math.floor(Math.random()*50000+1000).toLocaleString()}`});
+      lines.push({t:'t-err', m:`[+] PAROLA BULUNDU: "${pwd}" — zayıf karakter seti`});
+    } else if(strength <= 3) {
+      lines.push({t:'t-dim', m:'[*] Hibrit saldırı başlatılıyor...'});
+      lines.push({t:'t-dim', m:`[*] ${Math.floor(Math.random()*9e8+1e8).toLocaleString()} kombinasyon denendi`});
+      lines.push({t:'t-warn', m:'[!] Parola kırılamadı — orta güçte'});
+    } else {
+      lines.push({t:'t-dim', m:'[*] Tüm yöntemler deneniyor...'});
+      lines.push({t:'t-dim', m:`[*] Tahmini kırma süresi: ${strength===5?'yüzlerce yıl':'onlarca yıl'}`});
+      lines.push({t:'t-success', m:'[✓] PAROLA KIRMA BAŞARISIZ — güçlü parola tespit edildi'});
+    }
+  } else {
+    lines.push({t:'t-prompt', m:'[*] Connecting to target system...'});
+    lines.push({t:'t-info', m:'[*] Brute force module initialized'});
+    lines.push({t:'t-dim', m:'[*] Loading wordlist: rockyou.txt (14M entries)'});
+    lines.push({t:'t-dim', m:`[*] Target password length: ${pwd.length} chars`});
+    if(inWordlist) {
+      lines.push({t:'t-warn', m:'[!] Password found in common wordlist!'});
+      lines.push({t:'t-err', m:`[+] PASSWORD CRACKED: "${pwd}" — in 0.3 seconds`});
+    } else if(strength <= 2) {
+      lines.push({t:'t-dim', m:'[*] Starting brute force attempt...'});
+      lines.push({t:'t-warn', m:`[*] Combinations tried: ${Math.floor(Math.random()*50000+1000).toLocaleString()}`});
+      lines.push({t:'t-err', m:`[+] PASSWORD CRACKED: "${pwd}" — weak charset`});
+    } else if(strength <= 3) {
+      lines.push({t:'t-dim', m:'[*] Starting hybrid attack...'});
+      lines.push({t:'t-dim', m:`[*] ${Math.floor(Math.random()*9e8+1e8).toLocaleString()} combinations tried`});
+      lines.push({t:'t-warn', m:'[!] Password not cracked — medium strength'});
+    } else {
+      lines.push({t:'t-dim', m:'[*] Trying all methods...'});
+      lines.push({t:'t-dim', m:`[*] Estimated crack time: ${strength===5?'hundreds of years':'decades'}`});
+      lines.push({t:'t-success', m:'[✓] CRACK FAILED — strong password detected'});
+    }
+  }
+
+  term.innerHTML = '';
+  let i = 0;
+  function printLine() {
+    if(i >= lines.length) {
+      document.getElementById('bf-btn').disabled = false;
+      showBFResult(inWordlist, strength, pwd);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'terminal-line ' + lines[i].t;
+    span.textContent = lines[i].m;
+    term.appendChild(span);
+    term.appendChild(document.createElement('br'));
+    term.scrollTop = term.scrollHeight;
+    i++;
+    setTimeout(printLine, 300 + Math.random()*200);
+  }
+  printLine();
+}
+
+function showBFResult(inWordlist, strength, pwd) {
+  const r = document.getElementById('bf-result');
+  r.classList.add('show');
+  if(inWordlist || strength <= 2) {
+    r.className = 'result-card show danger';
+    r.innerHTML = `<strong>${lang==='tr'?'⚠ PAROLA KIRILDI':'⚠ PASSWORD CRACKED'}</strong>${lang==='tr'?`"${pwd}" parolası güvensiz. Önerilen: büyük/küçük harf, rakam ve sembol içeren ${Math.max(16, pwd.length+4)}+ karakterlik parola.`:`"${pwd}" is unsafe. Suggested: ${Math.max(16, pwd.length+4)}+ characters including uppercase, lowercase, numbers and symbols.`}`;
+  } else if(strength === 3) {
+    r.className = 'result-card show warn';
+    r.innerHTML = `<strong>${lang==='tr'?'⚡ ORTA GÜÇ':'⚡ MEDIUM STRENGTH'}</strong>${lang==='tr'?'Parolanız kırılmadı fakat daha güçlü olabilir. MFA eklemenizi öneririz.':'Password not cracked but could be stronger. We recommend adding MFA.'}`;
+  } else {
+    r.className = 'result-card show safe';
+    r.innerHTML = `<strong>${lang==='tr'?'✓ GÜÇLÜ PAROLA':'✓ STRONG PASSWORD'}</strong>${lang==='tr'?'Tebrikler! Parolanız brute force saldırısına karşı güçlü. Düzenli değiştirmeyi unutmayın.':'Congratulations! Your password is strong against brute force attacks. Remember to change it regularly.'}`;
+  }
+}
+
+// ---- OSINT ----
+function buildOSINT() {
+  return `
+    <h3>${lang==='tr'?'// Simülasyon':'// Simulation'}</h3>
+    <div class="input-group">
+      <span class="input-label">${lang==='tr'?'HEDEF ALAN ADI / E-POSTA:':'TARGET DOMAIN / EMAIL:'}</span>
+      <input class="lab-input" id="osint-input" type="text" placeholder="${lang==='tr'?'örn: example.com veya user@mail.com':'e.g. example.com or user@mail.com'}">
+    </div>
+    <button class="lab-btn" id="osint-btn" onclick="runOSINT()">
+      ▶ ${lang==='tr'?'OSINT TARAMASI BAŞLAT':'START OSINT SCAN'}
+    </button>
+    <div class="terminal" id="osint-term">
+      <span class="terminal-line t-dim">${lang==='tr'?'# Hedef girin ve taramayı başlatın':'# Enter a target and start the scan'}</span>
+    </div>
+    <div class="osint-results" id="osint-results"></div>
+  `;
+}
+
+function runOSINT() {
+  const target = document.getElementById('osint-input').value.trim();
+  if(!target) return;
+  const isEmail = target.includes('@');
+  const term = document.getElementById('osint-term');
+  const results = document.getElementById('osint-results');
+  results.classList.remove('show');
+  results.innerHTML = '';
+  document.getElementById('osint-btn').disabled = true;
+
+  const lines = lang==='tr' ? [
+    {t:'t-prompt', m:`[*] OSINT taraması başlatılıyor: ${target}`},
+    {t:'t-info', m:'[*] DNS kayıtları sorgulanıyor...'},
+    {t:'t-dim', m:'[*] WHOIS veritabanı kontrol ediliyor...'},
+    {t:'t-dim', m:'[*] Sosyal medya profilleri aranıyor...'},
+    {t:'t-dim', m:'[*] Veri ihlali veritabanları taranıyor...'},
+    {t:'t-info', m:'[*] Tarama tamamlandı. Sonuçlar analiz ediliyor...'},
+  ] : [
+    {t:'t-prompt', m:`[*] Starting OSINT scan: ${target}`},
+    {t:'t-info', m:'[*] Querying DNS records...'},
+    {t:'t-dim', m:'[*] Checking WHOIS database...'},
+    {t:'t-dim', m:'[*] Searching social media profiles...'},
+    {t:'t-dim', m:'[*] Scanning data breach databases...'},
+    {t:'t-info', m:'[*] Scan complete. Analyzing results...'},
+  ];
+
+  term.innerHTML = '';
+  let i = 0;
+  function printLine() {
+    if(i >= lines.length) {
+      document.getElementById('osint-btn').disabled = false;
+      showOSINTResults(target, isEmail);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'terminal-line ' + lines[i].t;
+    span.textContent = lines[i].m;
+    term.appendChild(span);
+    term.appendChild(document.createElement('br'));
+    term.scrollTop = term.scrollHeight;
+    i++;
+    setTimeout(printLine, 350 + Math.random()*150);
+  }
+  printLine();
+}
+
+function showOSINTResults(target, isEmail) {
+  const r = document.getElementById('osint-results');
+  r.classList.add('show');
+  const domain = isEmail ? target.split('@')[1] : target;
+  const items = isEmail ? [
+    { key: lang==='tr'?'E-posta Durumu':'Email Status', val: lang==='tr'?'Aktif ve geçerli':'Active and valid', cls: 'o-partial' },
+    { key: lang==='tr'?'Veri İhlali':'Data Breach', val: lang==='tr'?'2 ihlalde bulundu':'Found in 2 breaches', cls: 'o-exposed' },
+    { key: lang==='tr'?'LinkedIn Profil':'LinkedIn Profile', val: lang==='tr'?'Tespit edildi':'Detected', cls: 'o-exposed' },
+    { key: lang==='tr'?'GitHub Hesabı':'GitHub Account', val: lang==='tr'?'Bulunamadı':'Not found', cls: 'o-private' },
+    { key: lang==='tr'?'OSINT Risk Skoru':'OSINT Risk Score', val: lang==='tr'?'Orta Risk (58/100)':'Medium Risk (58/100)', cls: 'o-partial' },
+  ] : [
+    { key: 'WHOIS', val: lang==='tr'?'Kayıt sahibi gizlenmiş':'Registrant hidden', cls: 'o-private' },
+    { key: 'DNS (A)', val: '104.21.xx.xx', cls: 'o-exposed' },
+    { key: 'MX Kayıt', val: lang==='tr'?'Google Mail tespit edildi':'Google Mail detected', cls: 'o-partial' },
+    { key: 'Subdomain', val: lang==='tr'?'4 subdomain bulundu':'4 subdomains found', cls: 'o-exposed' },
+    { key: 'SSL Sertifika', val: lang==='tr'?'Geçerli (365 gün)':'Valid (365 days)', cls: 'o-private' },
+    { key: lang==='tr'?'Açık Port':'Open Port', val: '80, 443, 8080', cls: 'o-partial' },
+  ];
+
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'osint-item';
+    div.innerHTML = `<span class="o-key">${item.key}</span><span class="o-tag ${item.cls}">${item.val}</span>`;
+    r.appendChild(div);
+  });
+}
+
+// ---- NMAP ----
+function buildNmap() {
+  return `
+    <h3>${lang==='tr'?'// Simülasyon':'// Simulation'}</h3>
+    <div class="input-group">
+      <span class="input-label">${lang==='tr'?'HEDEF IP / ALAN ADI:':'TARGET IP / DOMAIN:'}</span>
+      <input class="lab-input" id="nmap-input" type="text" placeholder="${lang==='tr'?'örn: 192.168.1.1 veya target.com':'e.g. 192.168.1.1 or target.com'}">
+    </div>
+    <div class="input-group">
+      <span class="input-label">${lang==='tr'?'TARAMA TÜRÜ:':'SCAN TYPE:'}</span>
+      <select class="lab-input" id="nmap-type">
+        <option value="syn">${lang==='tr'?'SYN Tarama (-sS) — Gizli':'SYN Scan (-sS) — Stealth'}</option>
+        <option value="full">${lang==='tr'?'Tam Tarama (-A) — Ayrıntılı':'Full Scan (-A) — Detailed'}</option>
+        <option value="udp">${lang==='tr'?'UDP Tarama (-sU)':'UDP Scan (-sU)'}</option>
+      </select>
+    </div>
+    <button class="lab-btn" id="nmap-btn" onclick="runNmap()">
+      ▶ ${lang==='tr'?'PORT TARAMASI BAŞLAT':'START PORT SCAN'}
+    </button>
+    <div class="terminal" id="nmap-term">
+      <span class="terminal-line t-dim">${lang==='tr'?'# Hedef ve tarama türünü seçin':'# Select target and scan type'}</span>
+    </div>
+    <div class="nmap-ports" id="nmap-ports"></div>
+  `;
+}
+
+function runNmap() {
+  const target = document.getElementById('nmap-input').value.trim() || '192.168.1.1';
+  const type = document.getElementById('nmap-type').value;
+  const term = document.getElementById('nmap-term');
+  const ports = document.getElementById('nmap-ports');
+  ports.classList.remove('show');
+  ports.innerHTML = '';
+  document.getElementById('nmap-btn').disabled = true;
+
+  const scanType = {syn: '-sS', full: '-A -T4', udp: '-sU'}[type];
+  const lines = lang==='tr' ? [
+    {t:'t-prompt', m:`[*] nmap ${scanType} ${target}`},
+    {t:'t-info', m:`[*] Nmap 7.94 başlatıldı`},
+    {t:'t-dim', m:`[*] ${target} taranıyor (${Math.floor(Math.random()*5+1000)} ms)`},
+    {t:'t-dim', m:'[*] Açık portlar tespit ediliyor...'},
+    {t:'t-info', m:'[*] Servis ve versiyon tespiti yapılıyor...'},
+    {t:'t-success', m:'[✓] Tarama tamamlandı'},
+  ] : [
+    {t:'t-prompt', m:`[*] nmap ${scanType} ${target}`},
+    {t:'t-info', m:`[*] Nmap 7.94 started`},
+    {t:'t-dim', m:`[*] Scanning ${target} (${Math.floor(Math.random()*5+1000)} ms)`},
+    {t:'t-dim', m:'[*] Detecting open ports...'},
+    {t:'t-info', m:'[*] Service and version detection running...'},
+    {t:'t-success', m:'[✓] Scan completed'},
+  ];
+
+  term.innerHTML = '';
+  let i = 0;
+  function printLine() {
+    if(i >= lines.length) {
+      document.getElementById('nmap-btn').disabled = false;
+      showNmapPorts(type);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'terminal-line ' + lines[i].t;
+    span.textContent = lines[i].m;
+    term.appendChild(span);
+    term.appendChild(document.createElement('br'));
+    term.scrollTop = term.scrollHeight;
+    i++;
+    setTimeout(printLine, 280 + Math.random()*200);
+  }
+  printLine();
+}
+
+function showNmapPorts(type) {
+  const p = document.getElementById('nmap-ports');
+  p.classList.add('show');
+  const portData = type === 'udp' ? [
+    { num:'53/udp', state:'open', cls:'p-open', service:'domain', risk: lang==='tr'?'DNS — dikkat':'DNS — caution' },
+    { num:'67/udp', state:'open', cls:'p-open', service:'dhcps', risk: lang==='tr'?'DHCP sunucusu':'DHCP server' },
+    { num:'161/udp', state:'filtered', cls:'p-filtered', service:'snmp', risk: lang==='tr'?'SNMP — zayıf olabilir':'SNMP — may be weak' },
+    { num:'123/udp', state:'open', cls:'p-open', service:'ntp', risk:'NTP' },
+  ] : [
+    { num:'22/tcp', state:'open', cls:'p-open', service:'SSH 8.9p1', risk: lang==='tr'?'Erişim — güçlü parola?':'Access — strong pwd?' },
+    { num:'80/tcp', state:'open', cls:'p-open', service:'HTTP nginx 1.24', risk: lang==='tr'?'HTTP — HTTPS yok!':'HTTP — No HTTPS!' },
+    { num:'443/tcp', state:'open', cls:'p-open', service:'HTTPS TLS 1.3', risk: lang==='tr'?'Güvenli':'Secure' },
+    { num:'3306/tcp', state:'open', cls:'p-open', service:'MySQL 8.0', risk: lang==='tr'?'Veritabanı — kapalı olmalı!':'DB — should be closed!' },
+    { num:'8080/tcp', state:'filtered', cls:'p-filtered', service:'http-proxy', risk: lang==='tr'?'Proxy — filtrelenmiş':'Proxy — filtered' },
+    { num:'21/tcp', state:'closed', cls:'p-closed', service:'ftp', risk: lang==='tr'?'Kapalı':'Closed' },
+  ];
+
+  portData.forEach(row => {
+    const div = document.createElement('div');
+    div.className = 'port-row';
+    div.innerHTML = `<span class="p-num">${row.num}</span><span class="p-state ${row.cls}">${row.state}</span><span class="p-service">${row.service}</span><span class="p-risk">${row.risk}</span>`;
+    p.appendChild(div);
+  });
+}
+
+// ---- PHISHING ----
+function buildPhishing() {
+  return `
+    <h3>${lang==='tr'?'// Simülasyon':'// Simulation'}</h3>
+    <div class="input-group">
+      <span class="input-label">${lang==='tr'?'KONTROL EDİLECEK URL:':'URL TO CHECK:'}</span>
+      <input class="lab-input" id="ph-input" type="text" placeholder="${lang==='tr'?'örn: http://paypa1.com/login':'e.g. http://paypa1.com/login'}">
+    </div>
+    <button class="lab-btn" id="ph-btn" onclick="runPhishing()">
+      ▶ ${lang==='tr'?'URL ANALİZİ BAŞLAT':'START URL ANALYSIS'}
+    </button>
+    <div class="terminal" id="ph-term">
+      <span class="terminal-line t-dim">${lang==='tr'?'# Şüpheli bir URL girin':'# Enter a suspicious URL'}</span>
+    </div>
+    <div class="result-card" id="ph-result"></div>
+    <div class="url-analysis-grid" id="ph-grid"></div>
+  `;
+}
+
+function runPhishing() {
+  const url = document.getElementById('ph-input').value.trim();
+  if(!url) return;
+  const term = document.getElementById('ph-term');
+  const result = document.getElementById('ph-result');
+  const grid = document.getElementById('ph-grid');
+  result.classList.remove('show','safe','danger','warn');
+  grid.classList.remove('show');
+  grid.innerHTML = '';
+  document.getElementById('ph-btn').disabled = true;
+
+  // analyze
+  const lower = url.toLowerCase();
+  let score = 0;
+  const flags = [];
+  if(!lower.startsWith('https')) { score += 2; flags.push(lang==='tr'?'HTTPS yok':'No HTTPS'); }
+  if(/[0-9]/.test(lower.replace(/:\d+/g,'').split('/')[2]||'')) { score += 2; flags.push(lang==='tr'?'IP adresi kullanımı':'IP in URL'); }
+  const typos = ['paypa1','g00gle','arnazon','micros0ft','faceb00k','twltter','netfl1x','app1e'];
+  if(typos.some(t => lower.includes(t))) { score += 3; flags.push(lang==='tr'?'Typosquatting tespit edildi':'Typosquatting detected'); }
+  const badTlds = ['.tk','.ml','.ga','.cf','.xyz'];
+  if(badTlds.some(t => lower.includes(t))) { score += 2; flags.push(lang==='tr'?'Şüpheli TLD':'Suspicious TLD'); }
+  if((lower.match(/\./g)||[]).length > 3) { score += 2; flags.push(lang==='tr'?'Çok fazla subdomain':'Too many subdomains'); }
+  if(lower.length > 80) { score += 1; flags.push(lang==='tr'?'Uzun URL':'Long URL'); }
+  const keywords = ['login','verify','secure','account','update','banking','paypal','amazon'];
+  if(keywords.some(k => lower.includes(k))) { score += 1; flags.push(lang==='tr'?'Hassas kelime içeriyor':'Contains sensitive keywords'); }
+
+  const lines = lang==='tr' ? [
+    {t:'t-prompt', m:`[*] URL analiz ediliyor: ${url}`},
+    {t:'t-info', m:'[*] DNS kayıtları sorgulanıyor...'},
+    {t:'t-dim', m:'[*] Blacklist kontrolü yapılıyor...'},
+    {t:'t-dim', m:'[*] SSL sertifikası doğrulanıyor...'},
+    {t:'t-dim', m:'[*] Typosquatting analizi...'},
+    {t:'t-info', m:'[*] Analiz tamamlandı'},
+  ] : [
+    {t:'t-prompt', m:`[*] Analyzing URL: ${url}`},
+    {t:'t-info', m:'[*] Querying DNS records...'},
+    {t:'t-dim', m:'[*] Checking blacklists...'},
+    {t:'t-dim', m:'[*] Verifying SSL certificate...'},
+    {t:'t-dim', m:'[*] Typosquatting analysis...'},
+    {t:'t-info', m:'[*] Analysis complete'},
+  ];
+
+  term.innerHTML = '';
+  let i = 0;
+  function printLine() {
+    if(i >= lines.length) {
+      document.getElementById('ph-btn').disabled = false;
+      showPhishingResult(score, flags, url);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'terminal-line ' + lines[i].t;
+    span.textContent = lines[i].m;
+    term.appendChild(span);
+    term.appendChild(document.createElement('br'));
+    term.scrollTop = term.scrollHeight;
+    i++;
+    setTimeout(printLine, 300 + Math.random()*150);
+  }
+  printLine();
+}
+
+function showPhishingResult(score, flags, url) {
+  const r = document.getElementById('ph-result');
+  const grid = document.getElementById('ph-grid');
+  r.classList.add('show');
+  grid.classList.add('show');
+
+  if(score >= 5) {
+    r.className = 'result-card show danger';
+    r.innerHTML = `<strong>🚨 ${lang==='tr'?'YÜKSEK RİSKLİ URL — PHİSHİNG TESPİT EDİLDİ':'HIGH RISK URL — PHISHING DETECTED'}</strong>${flags.join(' · ')}`;
+  } else if(score >= 2) {
+    r.className = 'result-card show warn';
+    r.innerHTML = `<strong>⚠ ${lang==='tr'?'ŞÜPHELI URL — DİKKATLİ OL':'SUSPICIOUS URL — BE CAREFUL'}</strong>${flags.length ? flags.join(' · ') : (lang==='tr'?'Bazı şüpheli özellikler tespit edildi':'Some suspicious features detected')}`;
+  } else {
+    r.className = 'result-card show safe';
+    r.innerHTML = `<strong>✓ ${lang==='tr'?'URL GÜVENLİ GÖRÜNÜYOR':'URL APPEARS SAFE'}</strong>${lang==='tr'?'Tespit edilen kritik risk faktörü yok. Yine de dikkatli olun.':'No critical risk factors detected. Stay cautious anyway.'}`;
+  }
+
+  const checks = [
+    { label: 'HTTPS', val: url.toLowerCase().startsWith('https') ? (lang==='tr'?'Mevcut':'Present') : (lang==='tr'?'YOK!':'MISSING!'), cls: url.toLowerCase().startsWith('https') ? 'a-good' : 'a-bad' },
+    { label: lang==='tr'?'Typosquatting':'Typosquatting', val: flags.some(f=>f.includes('ypo')||f.includes('ypos')) ? (lang==='tr'?'Tespit edildi':'Detected') : (lang==='tr'?'Temiz':'Clean'), cls: flags.some(f=>f.includes('ypo')||f.includes('ypos')) ? 'a-bad' : 'a-good' },
+    { label: lang==='tr'?'Uzunluk':'Length', val: url.length + ' ' + (lang==='tr'?'karakter':'chars'), cls: url.length > 80 ? 'a-bad' : 'a-good' },
+    { label: lang==='tr'?'Risk Skoru':'Risk Score', val: score + '/10', cls: score>=5 ? 'a-bad' : score>=2 ? 'a-warn' : 'a-good' },
+  ];
+
+  checks.forEach(c => {
+    const div = document.createElement('div');
+    div.className = `analysis-item ${c.cls}`;
+    div.innerHTML = `<div class="a-label">${c.label}</div><div class="a-val">${c.val}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+// ---- SQL INJECTION ----
+function buildSQLi() {
+  return `
+    <h3>${lang==='tr'?'// Simülasyon':'// Simulation'}</h3>
+    <div class="input-group">
+      <span class="input-label">${lang==='tr'?'GİRİŞ ALANI (kullanıcı adı):':'LOGIN FIELD (username):'}</span>
+      <input class="lab-input" id="sql-input" type="text" placeholder="${lang==='tr'?"örn: admin' OR '1'='1":"e.g. admin' OR '1'='1"}">
+    </div>
+    <div class="input-group">
+      <span class="input-label">${lang==='tr'?'PAROLA:':'PASSWORD:'}</span>
+      <input class="lab-input" id="sql-pass" type="text" placeholder="${lang==='tr'?'herhangi bir şey...':'anything...'}">
+    </div>
+    <button class="lab-btn" id="sql-btn" onclick="runSQLi()">
+      ▶ ${lang==='tr'?'ENJEKSIYON TESTİ BAŞLAT':'START INJECTION TEST'}
+    </button>
+    <div class="terminal" id="sql-term">
+      <span class="terminal-line t-dim">${lang==='tr'?"# SQL payload deneyin: ' OR '1'='1":"# Try SQL payload: ' OR '1'='1"}</span>
+    </div>
+    <div class="result-card" id="sql-result"></div>
+    <table class="sql-table" id="sql-table">
+      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th></tr></thead>
+      <tbody id="sql-tbody"></tbody>
+    </table>
+  `;
+}
+
+function runSQLi() {
+  const user = document.getElementById('sql-input').value.trim();
+  if(!user) return;
+  const term = document.getElementById('sql-term');
+  const result = document.getElementById('sql-result');
+  const table = document.getElementById('sql-table');
+  result.classList.remove('show','safe','danger','info');
+  table.classList.remove('show');
+  document.getElementById('sql-btn').disabled = true;
+
+  const sqlPayloads = ["' or '1'='1", "' or 1=1", "admin'--", "' or 1=1--", "1; drop table", "union select", "' or '1'='1'--", "1=1", "' or true--"];
+  const isInjection = sqlPayloads.some(p => user.toLowerCase().includes(p.toLowerCase())) ||
+    (user.includes("'") && (user.includes('--') || user.toLowerCase().includes('or') || user.toLowerCase().includes('union')));
+
+  const query = `SELECT * FROM users WHERE username='${user}' AND password='${document.getElementById('sql-pass').value||'pass'}';`;
+
+  const lines = lang==='tr' ? [
+    {t:'t-prompt', m:'[*] Giriş isteği gönderiliyor...'},
+    {t:'t-dim', m:`[*] Oluşturulan SQL: ${query}`},
+    {t:'t-dim', m:'[*] Veritabanına sorgu gönderiliyor...'},
+  ] : [
+    {t:'t-prompt', m:'[*] Sending login request...'},
+    {t:'t-dim', m:`[*] Generated SQL: ${query}`},
+    {t:'t-dim', m:'[*] Sending query to database...'},
+  ];
+
+  if(isInjection) {
+    lines.push({t:'t-err', m: lang==='tr'?'[!] SQL ENJEKSIYONU TESPİT EDİLDİ!':'[!] SQL INJECTION DETECTED!'});
+    lines.push({t:'t-err', m: lang==='tr'?'[!] Tüm kullanıcı verileri sızdırıldı!':'[!] All user data exfiltrated!'});
+  } else {
+    lines.push({t:'t-success', m: lang==='tr'?'[✓] Giriş denemesi normal':'[✓] Login attempt normal'});
+    lines.push({t:'t-dim', m: lang==='tr'?'[*] SQL enjeksiyon işareti bulunamadı':'[*] No SQL injection signs found'});
+  }
+
+  term.innerHTML = '';
+  let i = 0;
+  function printLine() {
+    if(i >= lines.length) {
+      document.getElementById('sql-btn').disabled = false;
+      showSQLiResult(isInjection, user);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'terminal-line ' + lines[i].t;
+    span.textContent = lines[i].m;
+    term.appendChild(span);
+    term.appendChild(document.createElement('br'));
+    term.scrollTop = term.scrollHeight;
+    i++;
+    setTimeout(printLine, 300 + Math.random()*200);
+  }
+  printLine();
+}
+
+function showSQLiResult(isInjection, user) {
+  const r = document.getElementById('sql-result');
+  const table = document.getElementById('sql-table');
+  r.classList.add('show');
+  if(isInjection) {
+    r.className = 'result-card show danger';
+    r.innerHTML = `<strong>💀 ${lang==='tr'?'SQL ENJEKSIYONU BAŞARILI — VERİTABANI AÇIĞA ÇIKTI':'SQL INJECTION SUCCESSFUL — DATABASE EXPOSED'}</strong>${lang==='tr'?'Payload kimlik doğrulamasını atladı. Tüm kullanıcı kayıtları aşağıda görülüyor:':'Payload bypassed authentication. All user records visible below:'}`;
+    table.classList.add('show');
+    const tbody = document.getElementById('sql-tbody');
+    const users = [
+      ['1','admin','admin@corp.com','superadmin'],
+      ['2','jdoe','john.doe@corp.com','user'],
+      ['3','alice','alice@corp.com','moderator'],
+      ['4','bob','bob@corp.com','user'],
+    ];
+    tbody.innerHTML = '';
+    users.forEach(u => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = u.map(v=>`<td>${v}</td>`).join('');
+      tbody.appendChild(tr);
+    });
+  } else {
+    r.className = 'result-card show safe';
+    r.innerHTML = `<strong>✓ ${lang==='tr'?'NORMAL GİRİŞ DENEMESİ':'NORMAL LOGIN ATTEMPT'}</strong>${lang==='tr'?"SQL enjeksiyonu tespit edilmedi. Deneyin: admin' OR '1'='1":"No SQL injection detected. Try: admin' OR '1'='1"}`;
+  }
+}
+</script>
+</body>
+</html>
