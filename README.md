@@ -3,7 +3,6 @@
 > Siber güvenlik öğrencileri için interaktif eğitim platformu.  
 > Interactive cybersecurity training platform for students.
 
-🌐 **Live Demo:** [damacanalisan.github.io/cyberlab](https://damacanalisan.github.io/cyberlab)
 
 ---
 
