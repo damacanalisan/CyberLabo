@@ -3,6 +3,7 @@
 > Siber güvenlik öğrencileri için interaktif eğitim platformu.  
 > Interactive cybersecurity training platform for students.
 
+🌐 **Site linki:** [siberlabo.netlify.app](https://siberlabo.netlify.app/)
 
 ---
 
@@ -36,8 +37,6 @@ Gerçek sistemlerde izinsiz kullanım **yasaldır ve suç teşkil eder**.
 This platform is **for educational purposes only**.  
 Unauthorized use on real systems is **illegal**.
 
-site linki:(siberlabo.netlify.app)
-
 ---
 
-Made with ❤️ for cybersecurity student
+Made with ❤️ for cybersecurity students
