@@ -36,6 +36,8 @@ Gerçek sistemlerde izinsiz kullanım **yasaldır ve suç teşkil eder**.
 This platform is **for educational purposes only**.  
 Unauthorized use on real systems is **illegal**.
 
+>site linki:siberlabo.netlify.app
+
 ---
 
 Made with ❤️ for cybersecurity student
